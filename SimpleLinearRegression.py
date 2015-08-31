@@ -8,8 +8,7 @@ import numpy as np
 
 class SimpleLinearRegression(object):
 
-    def __init__(self):
-        self.alpha = alpha
+    def __init__(self): 
         self.beta = None
         self.alpha = None
 
@@ -24,3 +23,9 @@ class SimpleLinearRegression(object):
 
     def parameters(self):
         return self.alpha, self.beta
+
+    def _sum_of_squares(self, y):
+        return sum( y_i**2 for y_i in y )
+
+    def r_squared(self, x, y):
+        return 1.0 - self._sum_of_squares( self.beta*x_i + self.alpha - y_i for x_i, y_i in zip(x, y) ) / self._sum_of_squares( y_i - np.mean(y) for y_i in y ) 
