@@ -1,15 +1,14 @@
 from __future__ import division
 from NaiveBayes import NaiveBayesClassifier
 from collections import Counter
+
 import glob, re, random
 
 path = r"/home/ubuntu/Projects/DataScienceFromScrach/DataScienceFromScratchData/*/*"
 
 data = []
-
 for fn in glob.glob(path):
     is_spam = 'ham' not in fn
-
     with open(fn, 'r') as file:
         for line in file:
             if line.startswith("Subject:"):
@@ -19,16 +18,15 @@ for fn in glob.glob(path):
 def split_data(data, p):
     return data[:int(len(data)*p)], data[int(len(data)*p):]
 
-random.seed(0)
 def in_random_order(data):
     indices = [i for i, _ in enumerate(data)]
     random.shuffle(indices)
     result = []
     for i in indices:
         result.append(data[i])
-
     return result
 
+random.seed(0)
 train_data, test_data = split_data(in_random_order(data), 0.75)
 classifier = NaiveBayesClassifier()
 classifier.train(train_data)
