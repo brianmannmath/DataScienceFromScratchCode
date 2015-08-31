@@ -54,7 +54,13 @@ def negate_all(f):
         return [-y for y in f(*args, **kwargs)]
     return f_neg_all
 
-#Stochastic Gradient Descent
+def maximize_batch(f, grad, start, tolerance=0.0000001):
+    try:
+        return minimize_batch(negate(f), negate_all(grad), start, tolerance)
+    except:
+        return minimize_batch(negate(f), negate_all(grad), start, tolerance)
+
+#Gradient Descent
 def in_random_order(data):
     indices = [i for i, _ in enumerate(data)]
     random.shuffle(indices)
