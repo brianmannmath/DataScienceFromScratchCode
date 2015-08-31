@@ -25,11 +25,14 @@ def logistic_log_likelihood(x, y, beta):
     return sum( logistic_log_likelihood_i(x_i, y_i, beta)
                 for (x_i, y_i) in zip(x, y) )
 
-def log_likelihood_partial(x, y, beta, j):
-    return sum( (y_i - logistic(np.dot(x_i, beta)))*x_i[j] for x_i, y_i in zip(x, y) )
+def log_likelihood_partial_ij(x_i, y_i, beta, j):
+    return (y_i - logistic(np.dot(x_i, beta)))*x_i[j] 
+
+def log_likelihood_gradient_i(x_i, y_i, beta):
+    return [log_likelihood_partial_ij(x_i, y_i, beta, j) for j, _ in enumerate(beta)]
 
 def gradient(x, y, beta):
-    return [log_likelihood_partial(x, y, beta, j) for j, _ in enumerate(beta)]
+    return reduce(np.add, [log_likelihood_gradient_i(x_i, y_i, beta) for x_i, y_i in zip(x, y)])
 
 class LogisticRegression(object):
 
@@ -38,4 +41,4 @@ class LogisticRegression(object):
 
     def train(self, X, y):
         X = [[1] + x for x in X]
-        self.beta = gd.maximize_batch(partial(logistic_log_likelihood, X, y), partial(gradient, X, y), start=[1.0 for _ in X[0]]) 
+        self.beta = gd.maximize_batch(partial(logistic_log_likelihood, X, y), partial(gradient, X, y), start=[0.0 for _ in X[0]]) 
